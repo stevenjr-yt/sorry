@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Ayna 🌹</title>
+    <title>For Ayna 🌸</title>
     <style>
-        /* Pake font yang elegan dari Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap');
 
         body {
             margin: 0;
@@ -15,168 +14,198 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #fdfbfb; /* Putih bersih agak warm */
+            background-color: #1a0b1c; /* Warna background gelap biar bunganya pop out */
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; /* Biar animasi mawar gak bikin scroll */
+            overflow: hidden;
+            flex-direction: column;
         }
 
-        .card-container {
+        .container {
             position: relative;
-            width: 320px;
-            height: 480px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* Container Bunganya */
+        .flower {
+            position: relative;
+            width: 100px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
             z-index: 10;
         }
 
-        .card-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-        }
-
-        .flower-img {
-            width: 100%;
-            height: 480px; /* Full sebelum diklik */
-            object-fit: cover;
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .content {
+        /* Batang Bunga */
+        .stem {
             position: absolute;
             bottom: 0;
+            width: 8px;
+            height: 180px;
+            background: linear-gradient(to right, #1b5e20, #4caf50, #1b5e20);
+            border-radius: 4px;
+        }
+
+        /* Daun */
+        .leaf {
+            position: absolute;
+            bottom: 60px;
+            width: 40px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 0 20px 0 20px;
+            transition: transform 2s ease-in-out;
+        }
+        
+        .leaf-left {
+            left: -20px;
+            transform-origin: right bottom;
+            transform: rotate(-30deg) scale(0.5);
+        }
+        
+        .leaf-right {
+            right: -20px;
+            border-radius: 20px 0 20px 0;
+            transform-origin: left bottom;
+            transform: rotate(30deg) scale(0.5);
+            bottom: 80px;
+        }
+
+        /* Kelopak Bunga (Petals) */
+        .petals {
+            position: absolute;
+            bottom: 170px;
             width: 100%;
-            padding: 25px;
-            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+
+        .petal {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            height: 90px;
+            background: linear-gradient(to bottom, #ff1493, #c2185b);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: bottom center;
+            transition: transform 2.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 2.5s ease;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+            /* Kondisi Kuncup Awal */
+            transform: scale(0.6) rotate(0deg); 
+            z-index: 2;
+        }
+
+        /* Urutan kelopak biar numpuknya pas */
+        .p1 { z-index: 5; background: linear-gradient(to bottom, #ff4081, #d81b60); }
+        .p2 { z-index: 4; }
+        .p3 { z-index: 3; }
+        .p4 { z-index: 2; }
+        .p5 { z-index: 1; }
+
+        /* --- ANIMASI PAS MEKAR (Class .blooming ditambahkan via JS) --- */
+        .flower.blooming .p1 { transform: scale(1.1) rotate(0deg); box-shadow: 0 0 20px rgba(255, 20, 147, 0.5); }
+        .flower.blooming .p2 { transform: scale(1) rotate(-35deg); }
+        .flower.blooming .p3 { transform: scale(1) rotate(35deg); }
+        .flower.blooming .p4 { transform: scale(0.9) rotate(-70deg); }
+        .flower.blooming .p5 { transform: scale(0.9) rotate(70deg); }
+        
+        .flower.blooming .leaf-left { transform: rotate(-50deg) scale(1); }
+        .flower.blooming .leaf-right { transform: rotate(50deg) scale(1); }
+
+        /* Teks yang muncul */
+        .message-container {
+            position: absolute;
+            top: -100px;
             text-align: center;
-            background: white;
+            width: 300px;
+            pointer-events: none;
+        }
+
+        #message {
+            font-family: 'Dancing Script', cursive;
+            color: #ffb6c1;
+            font-size: 38px;
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
             opacity: 0;
-            transform: translateY(100%);
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateY(20px);
+            transition: all 2s ease-in-out;
         }
 
-        /* Kelas yang ditambahkan via JS saat diklik */
-        .show-content .flower-img {
-            height: 250px;
-            border-bottom: 2px solid #f0f0f0;
-            filter: brightness(0.9);
-        }
-
-        .show-content .content {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: #b71c1c; /* Merah mawar gelap */
-            font-size: 24px;
-            margin: 0 0 10px 0;
-        }
-
-        p {
-            color: #555;
+        #sub-message {
+            font-family: 'Poppins', sans-serif;
+            color: white;
             font-size: 14px;
-            line-height: 1.6;
-            margin: 0;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 2s ease-in-out;
+            transition-delay: 1s; /* Munculnya telat dikit dari teks utama */
         }
 
         .hint {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-            width: 100%;
-            text-align: center;
-            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            transition: opacity 0.5s;
         }
 
-        .show-content .hint {
-            opacity: 0;
-        }
-
-        /* Animasi Kelopak Jatuh */
-        .petal {
-            position: absolute;
-            background-color: #d32f2f;
-            border-radius: 15px 0 15px 0; /* Bentuk mirip kelopak */
-            opacity: 0.6;
-            pointer-events: none;
-            animation: fall linear forwards;
-            z-index: 1;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
 
-    <div class="card-container" onclick="openCard()">
-        <img src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?q=80&w=600&auto=format&fit=crop" alt="Buket Mawar" class="flower-img">
-        <div class="hint" id="hintText">Tap Bunganya ✨</div>
+    <div class="container" onclick="makeItBloom()">
         
-        <div class="content">
-            <h1>Maafin aku ya, Ayna?</h1>
-            <p>Aku beneran nyesel udah bikin kamu bete. Ini buket mawar virtual buat kamu. Jangan ngambek lagi ya, senyum dong cantik... 🤍🌹</p>
+        <div class="message-container">
+            <div id="message">Kamu cantikkkk...</div>
+            <div id="sub-message">Maafin aku ya, Ayna? ❤️</div>
         </div>
+
+        <div class="flower" id="magicFlower">
+            <div class="stem"></div>
+            <div class="leaf leaf-left"></div>
+            <div class="leaf leaf-right"></div>
+            <div class="petals">
+                <div class="petal p5"></div>
+                <div class="petal p4"></div>
+                <div class="petal p3"></div>
+                <div class="petal p2"></div>
+                <div class="petal p1"></div>
+            </div>
+        </div>
+
+        <div class="hint" id="hintText">Tap bunganya (Pencet di mana aja)</div>
+
     </div>
 
     <script>
-        let isOpened = false;
+        let hasBloomed = false;
 
-        function openCard() {
-            if (isOpened) return; // Biar efeknya cuma jalan sekali
-            isOpened = true;
-            
-            // Munculin teks dan kecilin gambar mawar
-            document.querySelector('.card-container').classList.add('show-content');
-            
-            // Memicu animasi kelopak jatuh
-            dropPetals();
-        }
+        function makeItBloom() {
+            if (hasBloomed) return;
+            hasBloomed = true;
 
-        function dropPetals() {
-            // Bikin 30 kelopak mawar
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    let petal = document.createElement('div');
-                    petal.classList.add('petal');
-                    
-                    // Acak ukuran kelopak
-                    let size = Math.random() * 12 + 10; 
-                    petal.style.width = size + 'px';
-                    petal.style.height = size + 'px';
-                    
-                    // Acak posisi horizontal
-                    petal.style.left = Math.random() * 100 + 'vw';
-                    
-                    // Acak durasi jatuhnya biar natural (antara 4 sampai 8 detik)
-                    petal.style.animationDuration = (Math.random() * 4 + 4) + 's'; 
-                    
-                    // Tambahin kelopak ke body
-                    document.body.appendChild(petal);
-                    
-                    // Bersihin DOM setelah animasi kelar biar gak berat
-                    setTimeout(() => {
-                        petal.remove();
-                    }, 8000);
-                    
-                }, i * 150); // Kelopak jatuhnya berurutan, gak barengan
-            }
+            // Ilangin teks hint
+            document.getElementById("hintText").style.opacity = '0';
+
+            // Tambahin class blooming biar CSS ngejalanin animasi mekarnya
+            document.getElementById("magicFlower").classList.add("blooming");
+
+            // Munculin teks setelah bunganya mulai mekar (delay 1.5 detik)
+            setTimeout(() => {
+                document.getElementById("message").style.opacity = '1';
+                document.getElementById("message").style.transform = 'translateY(0)';
+                
+                document.getElementById("sub-message").style.opacity = '1';
+                document.getElementById("sub-message").style.transform = 'translateY(0)';
+            }, 1500);
         }
     </script>
 
